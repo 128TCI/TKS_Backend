@@ -1,0 +1,6 @@
+@WebbApp_HostAddress = http://localhost:5098
+
+GET {{WebbApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
