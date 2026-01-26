@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.DTOs.User;
 using Services.Interfaces.Authentication;
+using static Services.DTOs.User.LoginDTO;
 
 namespace Timekeeping.WebApp.Controllers;
 
@@ -32,5 +33,15 @@ public class UserLoginController : ControllerBase
 
         // This will now return the token AND all fields like EmpCode, Email, etc.
         return Ok(response);
+    }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] LogoutDTO logoutDto, CancellationToken ct)
+    {
+        var result = await _authService.LogoutAsync(logoutDto.UserId, ct);
+
+        if (!result)
+            return NotFound(new { message = "User not found" });
+
+        return Ok(new { message = "Logged out successfully" });
     }
 }

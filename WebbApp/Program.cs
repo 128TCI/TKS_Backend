@@ -1,20 +1,22 @@
 using DomainEntities.DTO;
 using Infrastructure.IRepositories.FileSetUp.Employment;
+using Infrastructure.IRepositories.Maintenance;
+using Infrastructure.IRepositories.UserRepository;
 using Infrastructure.Repositories.FileSetup.Employment;
+using Infrastructure.Repositories.Maintennace;
+using Infrastructure.Repositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
+using Services.DTOs.Encryption;
+using Services.Implementation.Authentication;
 using Services.Interfaces.Authentication;
 using Services.Interfaces.Employee;
 using Services.Interfaces.Encryption;
-using Timekeeping.Infrastructure.Data;
-using Services.Services.FileSetUp.Employment;
 using Services.Interfaces.FileSetUp.Employment;
-using Infrastructure.IRepositories.UserRepository;
-using Infrastructure.Repositories.UserRepository;
-using Services.Services.UserRepository;
-using Infrastructure.IRepositories.Maintenance;
-using Infrastructure.Repositories.Maintennace;
-using Services.Services.Maintenance;
 using Services.Interfaces.Maintenence;
+using Services.Services.FileSetUp.Employment;
+using Services.Services.Maintenance;
+using Services.Services.UserRepository;
+using Timekeeping.Infrastructure.Data;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,7 +50,8 @@ builder.Services.AddDbContext<TimekeepingContext>(options =>
 //User
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+//Authentication
+builder.Services.AddScoped<EncryptionHelper>();
 //FileSetUp
 
 //FileSetUp/Employee

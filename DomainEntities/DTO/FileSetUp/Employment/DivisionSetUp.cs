@@ -14,9 +14,9 @@ namespace DomainEntities.DTO.FileSetUp.Employment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DivID { get; set; }
         public string DivCode { get; set; }
-        public string DivDesc { get; set; }
-        public string DivHead { get; set; }
-        public string DivHeadCode { get; set; }
-        public string DeviceName { get; set; }
+        public string? DivDesc { get; set; }
+        public string? DivHead { get; set; }
+        public string? DivHeadCode { get; set; }
+        public string? DeviceName { get; set; }
     }
 }

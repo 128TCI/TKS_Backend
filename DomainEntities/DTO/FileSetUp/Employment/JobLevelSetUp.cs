@@ -14,6 +14,6 @@ namespace DomainEntities.DTO.FileSetUp.Employment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int JobLevelID { get; set; }
         public string JobLevelCode { get; set; }
-        public string JobLevelDesc { get; set; }
+        public string? JobLevelDesc { get; set; }
     }
 }

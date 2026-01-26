@@ -29,24 +29,17 @@ public class UserService : IUserService
 
     public async Task<UserDTO> CreateAsync(UserDTO dto, CancellationToken ct = default)
     {
-        // 1. Initialize the decryption task
-        // This takes the encrypted string from the DTO and converts it to a Task
-        Task<string> TaskPassword = _encryptionService.GetCryptoJSDecryptionResultAsync(dto.Password, ct).AsTask();
-
-        // 2. Await the task to get the plain text password
-        string plainPassword = await TaskPassword;
-
-        // 3. Map to Entity
+        // 1. Map DTO to Entity
         var user = MapToEntity(dto);
 
-        // 4. Assign the decrypted password to the entity
-        // This replaces the encrypted string with the plain text version
-        user.Password = plainPassword;
+        // 2. Hash the plain text password using BCrypt
+        // The incoming dto.Password is now plain text (no encryption from frontend)
+        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.BCrypt.GenerateSalt(12));
 
-        // 5. Set Audit fields
+        // 3. Set Audit fields
         user.CreatedDate = DateTime.Now;
 
-        // 6. Save to Database
+        // 4. Save to Database
         var result = await _repository.InsertAsync(user);
 
         return MapToDTO(result);
@@ -54,12 +47,42 @@ public class UserService : IUserService
 
     public async Task<UserDTO> UpdateAsync(UserDTO dto)
     {
+        // 1. Get the existing user from database
+        var existingUser = await _repository.GetByIdAsync(dto.UserID);
+
+        if (existingUser == null)
+            throw new Exception("User not found");
+
+        // 2. Map DTO to Entity
         var user = MapToEntity(dto);
 
-        // Auto-set edit timestamp
+        // 3. Handle password update
+        if (!string.IsNullOrEmpty(dto.Password))
+        {
+            // Check if the password is already a BCrypt hash (starts with $2)
+            if (dto.Password.StartsWith("$2"))
+            {
+                // Password is already hashed, keep it as is
+                user.Password = dto.Password;
+            }
+            else
+            {
+                // Password is plain text, hash it with BCrypt
+                user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.BCrypt.GenerateSalt(12));
+            }
+        }
+        else
+        {
+            // No password provided in DTO, keep the existing password
+            user.Password = existingUser.Password;
+        }
+
+        // 4. Set audit fields
         user.EditedDate = DateTime.Now;
 
+        // 5. Update in database
         var result = await _repository.UpdateAsync(user);
+
         return MapToDTO(result);
     }
 

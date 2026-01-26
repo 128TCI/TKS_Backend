@@ -9,4 +9,8 @@ public class LoginDTO
         public string Token { get; set; } = string.Empty;
         public UserDTO User { get; set; } = null!;
     }
+    public class LogoutDTO
+    {
+        public int UserId { get; set; }
+    }
 }
