@@ -10,8 +10,7 @@ namespace DomainEntities.DTO.FileSetUp.Employment
 {
     public class OnlineApprovalSetUp
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public int ID { get; set; }
         public string OnlineAppCode { get; set; }
         public string? OnlineAppDesc { get; set; }

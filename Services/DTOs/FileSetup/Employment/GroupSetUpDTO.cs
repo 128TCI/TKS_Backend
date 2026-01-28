@@ -10,13 +10,11 @@ namespace Services.DTOs.FileSetup.Employment
 {
     public class GroupSetUpDTO
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        [Key]
         public string GrpCode { get; set; }
         public string GrpDesc { get; set; }
-        public string GrpHead { get; set; }
-        public string GrpDesig { get; set; }
+        public string? GrpHead { get; set; }
+        public string? GrpDesig { get; set; }
         public string GrpHeadCode { get; set; }
     }
 }

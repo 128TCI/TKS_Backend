@@ -5,7 +5,7 @@ using Services.Interfaces.FileSetUp.Employment;
 
 namespace WebbApp.Api.FileSetUp.Employment
 {
-    [Route("api/[controller]")]
+    [Route("api/Fs/Employment/[controller]")]
     [ApiController]
     public class LocationSetUpController : ControllerBase
     {

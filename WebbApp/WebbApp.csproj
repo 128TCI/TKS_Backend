@@ -16,9 +16,6 @@
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Api\FileSetUp\Process\" />
-    <Folder Include="Api\FileSetUp\System\" />
-  </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://www.schemastore.org/appveyor.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

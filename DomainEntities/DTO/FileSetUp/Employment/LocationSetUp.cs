@@ -27,8 +27,8 @@ namespace DomainEntities.DTO.FileSetUp.Employment
         public string? CreatedBy { get; set; }
 
         public DateTime? CreatedDate { get; set; }
-
-        public string EditedBy { get; set; }
+  
+        public string? EditedBy { get; set; }
 
         public DateTime? EditedDate { get; set; }
 

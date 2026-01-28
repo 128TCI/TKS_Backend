@@ -1,8 +1,14 @@
 using DomainEntities.DTO;
 using Infrastructure.IRepositories.FileSetUp.Employment;
+using Infrastructure.IRepositories.FileSetUp.Process;
+using Infrastructure.IRepositories.FileSetUp.Process.Alllowance_and_Earnings;
+using Infrastructure.IRepositories.FileSetUp.System;
 using Infrastructure.IRepositories.Maintenance;
 using Infrastructure.IRepositories.UserRepository;
 using Infrastructure.Repositories.FileSetup.Employment;
+using Infrastructure.Repositories.FileSetup.Process;
+using Infrastructure.Repositories.FileSetup.Process.Allowance_and_Earnings;
+using Infrastructure.Repositories.FileSetup.System;
 using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +18,14 @@ using Services.Interfaces.Authentication;
 using Services.Interfaces.Employee;
 using Services.Interfaces.Encryption;
 using Services.Interfaces.FileSetUp.Employment;
+using Services.Interfaces.FileSetUp.Process;
+using Services.Interfaces.FileSetUp.Process.Allowance_and_Earnings;
+using Services.Interfaces.FileSetUp.System;
 using Services.Interfaces.Maintenence;
 using Services.Services.FileSetUp.Employment;
+using Services.Services.FileSetUp.Process;
+using Services.Services.FileSetUp.Process.Allowance_and_Earnings;
+using Services.Services.FileSetUp.System;
 using Services.Services.Maintenance;
 using Services.Services.UserRepository;
 using Timekeeping.Infrastructure.Data;
@@ -53,7 +65,17 @@ builder.Services.AddScoped<IUserService, UserService>();
 //Authentication
 builder.Services.AddScoped<EncryptionHelper>();
 //FileSetUp
-
+//FileSetUp/Process
+//AllowanceBracketCodeSetUp
+builder.Services.AddScoped<IAllowanceBracketCodeSetUpRepository, AllowanceBracketCodeSetUpRepository>();
+builder.Services.AddScoped<IAllowanceBracketCodeSetUpService, AllowanceBracketCodeSetUpService>();
+//TimeKeepGroupSetUp
+builder.Services.AddScoped<ITimeKeepGroupSetUpRepository, TimeKeepGroupSetUpRepository>();
+builder.Services.AddScoped<ITimeKeepGroupSetUpService, TimeKeepGroupSetUpService>();
+//FileSetUp/Status
+//CompanyInformation
+builder.Services.AddScoped<ICompanyInformationRepository, CompanyInformationRepository>();
+builder.Services.AddScoped<ICompanyInformationService, CompanyInfromationService>();
 //FileSetUp/Employee
 //AreaSetUp
 builder.Services.AddScoped<IAreaSetUpRepository, AreaSetUpRepository>();
