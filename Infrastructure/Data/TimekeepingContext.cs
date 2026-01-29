@@ -1,6 +1,7 @@
 ﻿using DomainEntities.DTO.FileSetUp.Employment;
 using DomainEntities.DTO.FileSetUp.Process;
 using DomainEntities.DTO.FileSetUp.Process.Allowance_and_Earnings;
+using DomainEntities.DTO.FileSetUp.Process.Device;
 using DomainEntities.DTO.FileSetUp.System;
 using DomainEntities.DTO.Maintenance;
 using DomainEntities.DTO.User;
@@ -21,8 +22,16 @@ public class TimekeepingContext : DbContext
     public DbSet<CompanyInformationDTO> tbl_fsCompanyInfo { get; set; }
     //File Setup/Process
     public DbSet<AllowanceBracketCodeSetUpDTO> tbl_fsAllowBracketCode { get; set; }
-    //File Setup/Process
+    public DbSet<AllowanceBracketingSetUpDTO> tk_AllowBaseOnDayType  { get; set; }
+    public DbSet<AllowancePerClassificationSetUpDTO> tk_AllowancesPerClassificationSetup  { get; set; }
+    public DbSet<ClassificationSetUpDTO> tk_Classification { get; set; }
+    public DbSet<EarningSetUpDTO> tbl_fsEarnings { get; set; }
+    public DbSet<CalendarSetUpDTO> tk_Calendar  { get; set; }
     public DbSet<TimeKeepGroupSetUpDTO> tk_GroupSetUpDefinition { get; set; }
+    public DbSet<DayTypeSetUpDTO> tk_DayTypeSetup  { get; set; }
+    public DbSet<AMSDbConfigSetUpDTO> tk_AmsDbConfiguration { get; set; }
+    public DbSet<BorrowedDeviceNameDTO> tbl_fsBorrowedDeviceName { get; set; }
+    public DbSet<CoordinatesSetUpDTO> tbl_fsCoordinates { get; set; }
     //File Setup/Employee
     public DbSet<User> tk_Users { get; set; }
     public DbSet<AreaSetUp> tbl_fsArea { get; set; }

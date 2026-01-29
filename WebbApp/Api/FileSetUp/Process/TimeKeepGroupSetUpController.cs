@@ -8,7 +8,7 @@ using Services.Services.FileSetUp.Process;
 
 namespace WebbApp.Api.FileSetUp.Process
 {
-    [Route("api/Fs/Process[controller]")]
+    [Route("api/Fs/Process/[controller]")]
     [ApiController]
     public class TimeKeepGroupSetUpController : ControllerBase
     {

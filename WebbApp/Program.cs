@@ -2,12 +2,14 @@ using DomainEntities.DTO;
 using Infrastructure.IRepositories.FileSetUp.Employment;
 using Infrastructure.IRepositories.FileSetUp.Process;
 using Infrastructure.IRepositories.FileSetUp.Process.Alllowance_and_Earnings;
+using Infrastructure.IRepositories.FileSetUp.Process.Device;
 using Infrastructure.IRepositories.FileSetUp.System;
 using Infrastructure.IRepositories.Maintenance;
 using Infrastructure.IRepositories.UserRepository;
 using Infrastructure.Repositories.FileSetup.Employment;
 using Infrastructure.Repositories.FileSetup.Process;
 using Infrastructure.Repositories.FileSetup.Process.Allowance_and_Earnings;
+using Infrastructure.Repositories.FileSetup.Process.Device;
 using Infrastructure.Repositories.FileSetup.System;
 using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
@@ -20,15 +22,18 @@ using Services.Interfaces.Encryption;
 using Services.Interfaces.FileSetUp.Employment;
 using Services.Interfaces.FileSetUp.Process;
 using Services.Interfaces.FileSetUp.Process.Allowance_and_Earnings;
+using Services.Interfaces.FileSetUp.Process.Device;
 using Services.Interfaces.FileSetUp.System;
 using Services.Interfaces.Maintenence;
 using Services.Services.FileSetUp.Employment;
 using Services.Services.FileSetUp.Process;
 using Services.Services.FileSetUp.Process.Allowance_and_Earnings;
+using Services.Services.FileSetUp.Process.Device;
 using Services.Services.FileSetUp.System;
 using Services.Services.Maintenance;
 using Services.Services.UserRepository;
 using Timekeeping.Infrastructure.Data;
+using WebbApp.Api.FileSetUp.Process.Allowance_and_Earnings;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,10 +70,38 @@ builder.Services.AddScoped<IUserService, UserService>();
 //Authentication
 builder.Services.AddScoped<EncryptionHelper>();
 //FileSetUp
-//FileSetUp/Process
-//AllowanceBracketCodeSetUp
+    //Process
+        //AllowanceBracketCodeSetUp
 builder.Services.AddScoped<IAllowanceBracketCodeSetUpRepository, AllowanceBracketCodeSetUpRepository>();
 builder.Services.AddScoped<IAllowanceBracketCodeSetUpService, AllowanceBracketCodeSetUpService>();
+//AllowanceBracketingSetUp
+builder.Services.AddScoped<IAllowanceBracketingSetUpRepository, AllowanceBracketingSetUpRepository>();
+builder.Services.AddScoped<IAllowanceBracketingSetUpService, AllowanceBracketingSetUpService>();
+//AllowancePerClassificationSetUp
+builder.Services.AddScoped<IAllowancePerClassificationSetUpRepository, AllowancePerClassificationSetUpRepository>();
+builder.Services.AddScoped<IAllowancePerClassificationSetUpService, AllowancePerClassificationSetUpService>();
+//ClassificationSetUp
+builder.Services.AddScoped<IClassificationSetUpRepository, ClassificationSetUpRepository>();
+builder.Services.AddScoped<IClassificationSetUpService, ClassificationSetUpService>();
+//EarningSetUp
+builder.Services.AddScoped<IEarningsSetUpRepository, EarningsSetUpRepository>();
+builder.Services.AddScoped<IEarningsSetUpService, EarningsSetUpService>();
+//CalendarSetUp
+builder.Services.AddScoped<ICalendarSetUpRepository, CalendarSetUpRepository>();
+builder.Services.AddScoped<ICalendarSetUpService, CalendarSetUpService>();
+//DayTypeSetUp
+builder.Services.AddScoped<IDayTypeSetUpRepository, DayTypeSetUpRepository>();
+builder.Services.AddScoped<IDayTypeSetUpService, DayTypeSetUpService>();
+        //Device
+//AMSDbConfigSetUp
+builder.Services.AddScoped<IAMSDbConfigSetUpRepository, AMSDbConfigSetUpRepository>();
+builder.Services.AddScoped<IAMSDbConfigSetUpService, AMSDbConfigSetUpService>();
+//BorrowedDeviceName
+builder.Services.AddScoped<IBorrowedDeviceNameRepositoy, BorrowedDeviceNameRepository>();
+builder.Services.AddScoped<IBorrowedDeviceNameService, BorrowedDeviceNameService>();
+//CoordinatesSetUP
+builder.Services.AddScoped<ICoordinatesSetUpRepository, CoordinatesSetUpRepository>();
+builder.Services.AddScoped<ICoordinatesSetUpService, CoordinatesSetUpService>();
 //TimeKeepGroupSetUp
 builder.Services.AddScoped<ITimeKeepGroupSetUpRepository, TimeKeepGroupSetUpRepository>();
 builder.Services.AddScoped<ITimeKeepGroupSetUpService, TimeKeepGroupSetUpService>();
