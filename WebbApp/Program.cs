@@ -3,6 +3,7 @@ using Infrastructure.IRepositories.FileSetUp.Employment;
 using Infrastructure.IRepositories.FileSetUp.Process;
 using Infrastructure.IRepositories.FileSetUp.Process.Alllowance_and_Earnings;
 using Infrastructure.IRepositories.FileSetUp.Process.Device;
+using Infrastructure.IRepositories.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
 using Infrastructure.IRepositories.FileSetUp.System;
 using Infrastructure.IRepositories.Import;
 using Infrastructure.IRepositories.LeaveTypes;
@@ -13,6 +14,7 @@ using Infrastructure.Repositories.FileSetup.Employment;
 using Infrastructure.Repositories.FileSetup.Process;
 using Infrastructure.Repositories.FileSetup.Process.Allowance_and_Earnings;
 using Infrastructure.Repositories.FileSetup.Process.Device;
+using Infrastructure.Repositories.FileSetup.Process.Device.EquivHoursDeductionSetUp;
 using Infrastructure.Repositories.FileSetup.System;
 using Infrastructure.Repositories.Import;
 using Infrastructure.Repositories.LeaveTypes;
@@ -29,6 +31,7 @@ using Services.Interfaces.FileSetUp.Employment;
 using Services.Interfaces.FileSetUp.Process;
 using Services.Interfaces.FileSetUp.Process.Allowance_and_Earnings;
 using Services.Interfaces.FileSetUp.Process.Device;
+using Services.Interfaces.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
 using Services.Interfaces.FileSetUp.System;
 using Services.Interfaces.Import;
 using Services.Interfaces.LeaveTypes;
@@ -37,6 +40,7 @@ using Services.Services.FileSetUp.Employment;
 using Services.Services.FileSetUp.Process;
 using Services.Services.FileSetUp.Process.Allowance_and_Earnings;
 using Services.Services.FileSetUp.Process.Device;
+using Services.Services.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
 using Services.Services.FileSetUp.System;
 using Services.Services.Import;
 using Services.Services.LeaveTypes;
@@ -112,6 +116,12 @@ builder.Services.AddScoped<IBorrowedDeviceNameService, BorrowedDeviceNameService
 //CoordinatesSetUP
 builder.Services.AddScoped<ICoordinatesSetUpRepository, CoordinatesSetUpRepository>();
 builder.Services.AddScoped<ICoordinatesSetUpService, CoordinatesSetUpService>();
+//ForAbsent
+builder.Services.AddScoped<IEquivDayForAbsentRepository, EquivDayForAbsentRepository>();
+builder.Services.AddScoped<IEquivDayForAbsentService, EquivDayForAbsentService>();
+//ForNoLogin
+builder.Services.AddScoped<IEquivDayForNoLoginRepository, EquivDayForNologinRepository>();
+builder.Services.AddScoped<IEquivDayForNoLoginService, EquivDayForNoLoginService>();
 //TimeKeepGroupSetUp
 builder.Services.AddScoped<ITimeKeepGroupSetUpRepository, TimeKeepGroupSetUpRepository>();
 builder.Services.AddScoped<ITimeKeepGroupSetUpService, TimeKeepGroupSetUpService>();

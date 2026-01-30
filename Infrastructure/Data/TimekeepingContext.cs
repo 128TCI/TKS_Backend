@@ -3,6 +3,7 @@ using DomainEntities.DTO.FileSetUp.Employment;
 using DomainEntities.DTO.FileSetUp.Process;
 using DomainEntities.DTO.FileSetUp.Process.Allowance_and_Earnings;
 using DomainEntities.DTO.FileSetUp.Process.Device;
+using DomainEntities.DTO.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
 using DomainEntities.DTO.FileSetUp.System;
 using DomainEntities.DTO.Maintenance;
 using DomainEntities.DTO.User;
@@ -33,6 +34,11 @@ public class TimekeepingContext : DbContext
     public DbSet<AMSDbConfigSetUpDTO> tk_AmsDbConfiguration { get; set; }
     public DbSet<BorrowedDeviceNameDTO> tbl_fsBorrowedDeviceName { get; set; }
     public DbSet<CoordinatesSetUpDTO> tbl_fsCoordinates { get; set; }
+    public DbSet<EquivDayForAbsentDTO> tk_EquivDayForAbsent { get; set; }
+    public DbSet<EquivDayForNoLoginDTO> tk_EquivDayForNoLogin { get; set; }
+    public DbSet<EquivDayForNoLogoutDTO> tk_EquivDayForNoLogout { get; set; }
+    public DbSet<EquivDayForNoBreat2InDTO> tk_EquivDayForNoBreak2In { get; set; }
+    public DbSet<EquivDayForNoBreat2OutDTO> tk_EquivDayForNoBreak2Out { get; set; }
     //File Setup/Employee
     public DbSet<User> tk_Users { get; set; }
     public DbSet<AreaSetUp> tbl_fsArea { get; set; }

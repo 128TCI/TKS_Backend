@@ -9,8 +9,8 @@ namespace Infrastructure.IRepositories.FileSetUp.Process
 {
     public interface IDayTypeSetUpRepository
     {
-        Task<DayTypeSetUpDTO> InsertAsync(DayTypeSetUpDTO calendarSetUp);
-        Task<DayTypeSetUpDTO> UpdateAsync(DayTypeSetUpDTO calendarSetUp);
+        Task<DayTypeSetUpDTO> InsertAsync(DayTypeSetUpDTO data);
+        Task<DayTypeSetUpDTO> UpdateAsync(DayTypeSetUpDTO data);
         Task<bool> DeleteAsync(int id);
         Task<DayTypeSetUpDTO?> GetByIdAsync(int id);
         Task<List<DayTypeSetUpDTO>> GetAllAsync();
