@@ -10,8 +10,8 @@ namespace Infrastructure.IRepositories.FileSetUp.Process.Device
 {
     public interface IAMSDbConfigSetUpRepository
     {
-        Task<AMSDbConfigSetUpDTO> InsertAsync(AMSDbConfigSetUpDTO calendarSetUp);
-        Task<AMSDbConfigSetUpDTO> UpdateAsync(AMSDbConfigSetUpDTO calendarSetUp);
+        Task<AMSDbConfigSetUpDTO> InsertAsync(AMSDbConfigSetUpDTO data);
+        Task<AMSDbConfigSetUpDTO> UpdateAsync(AMSDbConfigSetUpDTO data);
         Task<bool> DeleteAsync(int id);
         Task<AMSDbConfigSetUpDTO?> GetByIdAsync(int id);
         Task<List<AMSDbConfigSetUpDTO>> GetAllAsync();
