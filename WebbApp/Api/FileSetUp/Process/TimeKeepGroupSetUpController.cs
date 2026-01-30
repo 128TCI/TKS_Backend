@@ -73,5 +73,11 @@ namespace WebbApp.Api.FileSetUp.Process
 
             return NoContent();
         }
+        [HttpGet("/ForImport")]
+        public async Task<ActionResult<List<TimeKeepGroupSetUpDTO>>> GetForImport()
+        {
+            var tksImport = await _TimeKeepGroupSetUpService.GetForImport();
+            return Ok(tksImport);
+        }
     }
 }

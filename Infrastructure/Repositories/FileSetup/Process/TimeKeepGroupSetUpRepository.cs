@@ -54,5 +54,10 @@ namespace Infrastructure.Repositories.FileSetup.Process
         {
             return await _context.tk_GroupSetUpDefinition.ToListAsync();
         }
+
+        public async Task<List<TimeKeepGroupSetUpDTO>> GetForImport()
+        {
+            return await _context.tk_GroupSetUpDefinition.FromSql($"SELECT * FROM dbo.tbl_tmpImpWorkShiftVar INNER JOIN dbo.tk_GroupSetUpDefinition ON tks_grp = GroupCode").ToListAsync();
+        }
     }
 }

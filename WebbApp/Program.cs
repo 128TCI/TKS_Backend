@@ -1,18 +1,24 @@
-using DomainEntities.DTO;
+
 using Infrastructure.IRepositories.FileSetUp.Employment;
 using Infrastructure.IRepositories.FileSetUp.Process;
 using Infrastructure.IRepositories.FileSetUp.Process.Alllowance_and_Earnings;
 using Infrastructure.IRepositories.FileSetUp.Process.Device;
 using Infrastructure.IRepositories.FileSetUp.System;
+using Infrastructure.IRepositories.Import;
+using Infrastructure.IRepositories.LeaveTypes;
 using Infrastructure.IRepositories.Maintenance;
 using Infrastructure.IRepositories.UserRepository;
+using Infrastructure.IRepositories.WorkShift;
 using Infrastructure.Repositories.FileSetup.Employment;
 using Infrastructure.Repositories.FileSetup.Process;
 using Infrastructure.Repositories.FileSetup.Process.Allowance_and_Earnings;
 using Infrastructure.Repositories.FileSetup.Process.Device;
 using Infrastructure.Repositories.FileSetup.System;
+using Infrastructure.Repositories.Import;
+using Infrastructure.Repositories.LeaveTypes;
 using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
+using Infrastructure.Repositories.WorkShift;
 using Microsoft.EntityFrameworkCore;
 using Services.DTOs.Encryption;
 using Services.Implementation.Authentication;
@@ -24,12 +30,16 @@ using Services.Interfaces.FileSetUp.Process;
 using Services.Interfaces.FileSetUp.Process.Allowance_and_Earnings;
 using Services.Interfaces.FileSetUp.Process.Device;
 using Services.Interfaces.FileSetUp.System;
+using Services.Interfaces.Import;
+using Services.Interfaces.LeaveTypes;
 using Services.Interfaces.Maintenence;
 using Services.Services.FileSetUp.Employment;
 using Services.Services.FileSetUp.Process;
 using Services.Services.FileSetUp.Process.Allowance_and_Earnings;
 using Services.Services.FileSetUp.Process.Device;
 using Services.Services.FileSetUp.System;
+using Services.Services.Import;
+using Services.Services.LeaveTypes;
 using Services.Services.Maintenance;
 using Services.Services.UserRepository;
 using Timekeeping.Infrastructure.Data;
@@ -162,6 +172,32 @@ builder.Services.AddScoped<IEmployeeMasterFileService, EmployeeMasterFileService
 //Authentication
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
+
+//LeaveTypes
+builder.Services.AddScoped<ILeaveTypesRepository, LeaveTypesRepository>();
+builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
+
+//ImportWorkshiftVariable
+builder.Services.AddScoped<IImportWorkshiftVariableRepository, ImportWorkshiftVariableRepository>();
+builder.Services.AddScoped<IImportWorkshiftVariableService, ImportWorkshiftVariableService>();
+
+//ImportWorkshiftRestday
+builder.Services.AddScoped<IImportWorkshiftRestdayService, ImportWorkshiftRestdayService>();
+
+//ImportLeaveApplication
+builder.Services.AddScoped<IImportLeaveApplicationRepository, ImportLeaveApplicationRepository>();
+builder.Services.AddScoped<IImportLeaveApplicationService, ImportLeaveApplicationService>();
+
+//ImportOvertimeApplication
+builder.Services.AddScoped<IImportOvertimeApplicationRepository, ImportOvertimeApplicationRepository>();
+builder.Services.AddScoped<IImportOvertimeApplicationService, ImportOvertimeApplicationService>();
+
+//ImportDeviceCode
+builder.Services.AddScoped<IImportDeviceCodeRepository, ImportDeviceCodeRepository>();
+builder.Services.AddScoped<IImportDeviceCodeService, ImportDeviceCodeService>();
+
+//WorkShift
+builder.Services.AddScoped<IWorkShiftRepository, WorkShiftRepository>();
 
 var app = builder.Build();
 

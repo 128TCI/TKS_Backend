@@ -15,5 +15,6 @@ namespace Services.Interfaces.FileSetUp.Process
         Task<bool> DeleteAsync(int id);
         Task<TimeKeepGroupSetUpDTO?> GetByIdAsync(int id);
         Task<List<TimeKeepGroupSetUpDTO>> GetAllAsync();
+        Task<List<TimeKeepGroupSetUpDTO>> GetForImport();
     }
 }

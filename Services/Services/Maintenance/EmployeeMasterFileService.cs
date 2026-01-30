@@ -15,7 +15,6 @@ namespace Services.Services.Maintenance
     {
         private readonly IEmployeeMasterFileRepository _repository;
         private readonly EncryptionHelper _crypto;
-        private bool _disposed = false;
 
         public EmployeeMasterFileService(IEmployeeMasterFileRepository repository, EncryptionHelper crypto)
         {

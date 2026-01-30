@@ -13,16 +13,11 @@ using System.Threading.Tasks;
 
 namespace Services.Services.FileSetUp.Process
 {
-    public class TimeKeepGroupSetUpService : ITimeKeepGroupSetUpService
+    public class TimeKeepGroupSetUpService(ITimeKeepGroupSetUpRepository repository, IEncryptionService encryptionService) : ITimeKeepGroupSetUpService
     {
-        private readonly ITimeKeepGroupSetUpRepository _repository;
-        private readonly IEncryptionService _encryptionService; // Injected service
+        private readonly ITimeKeepGroupSetUpRepository _repository = repository;
+        private readonly IEncryptionService _encryptionService = encryptionService; // Injected service
 
-        public TimeKeepGroupSetUpService(ITimeKeepGroupSetUpRepository repository, IEncryptionService encryptionService)
-        {
-            _repository = repository;
-            _encryptionService = encryptionService;
-        }
         public async Task<TimeKeepGroupSetUpDTO> CreateAsync(TimeKeepGroupSetUpDTO dto, CancellationToken ct = default)
         {
             var user = MapToEntity(dto);
@@ -62,6 +57,18 @@ namespace Services.Services.FileSetUp.Process
             }
 
             return users.Select(MapToDTO).ToList();
+        }
+
+        public async Task<List<TimeKeepGroupSetUpDTO>> GetForImport()
+        {
+            var tKSGroupLists = await _repository.GetForImport();
+
+            if (tKSGroupLists == null || tKSGroupLists.Count == 0)
+            {
+                return [];
+            }
+
+            return [.. tKSGroupLists];
         }
 
         // --- Mapping Logic ---

@@ -1,4 +1,5 @@
-﻿using DomainEntities.DTO.FileSetUp.Employment;
+﻿using DomainEntities.Dto;
+using DomainEntities.DTO.FileSetUp.Employment;
 using DomainEntities.DTO.FileSetUp.Process;
 using DomainEntities.DTO.FileSetUp.Process.Allowance_and_Earnings;
 using DomainEntities.DTO.FileSetUp.Process.Device;
@@ -51,6 +52,15 @@ public class TimekeepingContext : DbContext
 
     //Maintenance
     public DbSet<EmployeeMasterFile> tbl_fmEmpMasterFile { get; set; }
+
+    //ImportWorkshift
+    public DbSet<ImportWorkShiftVariableDto> tk_EmpTKConfigWorkShiftVariableMaint { get; set; }
+
+    //WorkShift
+    public DbSet<WorkShiftDto> tk_WorkShiftCode { get; set; }
+
+    //LeaveTypes
+    public DbSet<LeaveTypesDto> tbl_fsLeaveType { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

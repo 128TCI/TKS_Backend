@@ -54,5 +54,10 @@ namespace Infrastructure.Repositories.Maintennace
         {
             return await _context.tbl_fmEmpMasterFile.ToListAsync();
         }
+
+        public async Task<EmployeeMasterFile?> GetByEmpCode(string empCode)
+        {
+            return await _context.tbl_fmEmpMasterFile.FromSql($"SELECT * FROM tbl_fmEmpMasterFile WHERE EmpCode = {empCode}").FirstOrDefaultAsync();
+        }
     }
 }
