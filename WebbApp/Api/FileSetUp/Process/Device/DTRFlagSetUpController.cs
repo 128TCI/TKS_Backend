@@ -1,5 +1,4 @@
 ﻿using DomainEntities.DTO.FileSetUp.Process.Device;
-using Infrastructure.IRepositories.FileSetUp.Process.Device;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces.FileSetUp.Process.Device;
@@ -8,26 +7,26 @@ namespace WebbApp.Api.FileSetUp.Process.Device
 {
     [Route("api/Fs/Process/Device/[controller]")]
     [ApiController]
-    public class CoordinatesSetUpController : ControllerBase
+    public class DTRFlagSetUpController : ControllerBase
     {
-        private readonly ICoordinatesSetUpService _CoordinatesSetUpService;
+        private readonly IDTRFlagSetUpService _DTRFlagSetUpService;
 
-        public CoordinatesSetUpController(ICoordinatesSetUpService service)
+        public DTRFlagSetUpController(IDTRFlagSetUpService service)
         {
-            _CoordinatesSetUpService = service;
+            _DTRFlagSetUpService = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CoordinatesSetUpDTO>>> GetAll()
+        public async Task<ActionResult<List<DTRFlagSetUpDTO>>> GetAll()
         {
-            var data = await _CoordinatesSetUpService.GetAllAsync();
+            var data = await _DTRFlagSetUpService.GetAllAsync();
             return Ok(data);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CoordinatesSetUpDTO>> GetById(int id)
+        public async Task<ActionResult<DTRFlagSetUpDTO>> GetById(int id)
         {
-            var data = await _CoordinatesSetUpService.GetByIdAsync(id);
+            var data = await _DTRFlagSetUpService.GetByIdAsync(id);
             if (data == null)
                 return NotFound();
 
@@ -35,14 +34,14 @@ namespace WebbApp.Api.FileSetUp.Process.Device
         }
 
         [HttpPost]
-        public async Task<ActionResult<CoordinatesSetUpDTO>> Create([FromBody] CoordinatesSetUpDTO dto)
+        public async Task<ActionResult<DTRFlagSetUpDTO>> Create([FromBody] DTRFlagSetUpDTO dto)
         {
             if (dto == null)
             {
                 return Unauthorized("null");
             }
 
-            var result = await _CoordinatesSetUpService.CreateAsync(dto);
+            var result = await _DTRFlagSetUpService.CreateAsync(dto);
 
             // REMOVED: CreatedAtAction
             // ADDED: Simple Ok result
@@ -50,7 +49,7 @@ namespace WebbApp.Api.FileSetUp.Process.Device
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CoordinatesSetUpDTO>> Update(int id, [FromBody] CoordinatesSetUpDTO dto)
+        public async Task<ActionResult<DTRFlagSetUpDTO>> Update(int id, [FromBody] DTRFlagSetUpDTO dto)
         {
             if (id != dto.ID)
                 return BadRequest("ID mismatch");
@@ -58,18 +57,18 @@ namespace WebbApp.Api.FileSetUp.Process.Device
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _CoordinatesSetUpService.UpdateAsync(dto);
+            var result = await _DTRFlagSetUpService.UpdateAsync(dto);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var success = await _CoordinatesSetUpService.DeleteAsync(id);
+            var success = await _DTRFlagSetUpService.DeleteAsync(id);
             if (!success)
                 return NotFound();
 
             return NoContent();
         }
     }
-    }
+}

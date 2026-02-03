@@ -70,19 +70,23 @@ namespace Services.DTOs.Encryption
                 aes.Padding = PaddingMode.PKCS7;
                 aes.Mode = CipherMode.CBC;
 
+                // Clean base64 string
                 string cleanedInput = cipherText.Trim().Replace(" ", "+");
                 byte[] encryptedBytes = Convert.FromBase64String(cleanedInput);
 
                 using var ms = new MemoryStream(encryptedBytes);
-                using var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Read);
+                using var decryptor = aes.CreateDecryptor();
+                using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
 
-                byte[] outputBuffer = new byte[ms.Length];
-                int readBytes = cs.Read(outputBuffer, 0, outputBuffer.Length);
+                // Use StreamReader with the same Encoding used in Encrypt (Unicode/UTF-16)
+                // This is the key change that prevents cutting off characters
+                using var sr = new StreamReader(cs, Encoding.Unicode);
 
-                return Encoding.Unicode.GetString(outputBuffer, 0, readBytes);
+                return sr.ReadToEnd();
             }
-            catch
+            catch (Exception ex)
             {
+                // For debugging, you might want to log 'ex'
                 return cipherText;
             }
         }

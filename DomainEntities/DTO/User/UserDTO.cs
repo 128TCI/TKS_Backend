@@ -1,16 +1,20 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Services.DTOs.User
+namespace DomainEntities.DTO.User
 {
     public class UserDTO
     {
-        public int UserID { get; set; } 
-        public string UserName { get; set; } 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int UserID { get; set; }
+        public string UserName { get; set; }
+        public string MachineName { get; set; }
         public string? Password { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public bool? IsLoggedIn { get; set; }
         public bool? IsSuspended { get; set; }
-        public string MachineName { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? EditedBy { get; set; }
@@ -25,5 +29,13 @@ namespace Services.DTOs.User
         public DateTime? LastPasswordFailureDate { get; set; }
         public int? PasswordFailuresSinceLastSuccess { get; set; }
         public string? MachineIdentifier { get; set; }
+
+        // Domain validation method
+        public bool IsValid()
+        {
+            // Validates that non-nullable string fields in the DB are not empty
+            return !string.IsNullOrWhiteSpace(UserName) &&
+                   !string.IsNullOrWhiteSpace(MachineName);
+        }
     }
 }

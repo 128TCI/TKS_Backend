@@ -7,7 +7,7 @@ using Services.Interfaces.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
 
 namespace WebbApp.Api.FileSetUp.Process.Device
 {
-    [Route("api/[controller]")]
+    [Route("api/Fs/Process/Device/[controller]")]
     [ApiController]
     public class EquivHoursDeductionSetUpController : ControllerBase
     {

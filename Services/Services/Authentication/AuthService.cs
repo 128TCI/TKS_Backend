@@ -1,26 +1,34 @@
 ﻿using DomainEntities.DTO.User;
 using Infrastructure.IRepositories.UserRepository;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.DTOs.User;
 using Services.Interfaces.Authentication;
+using Services.DTOs.Encryption; // Ensure this is imported
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using static Services.DTOs.User.LoginDTO;
-using BCrypt.Net;
+using Services.Interfaces.Employee;
 
 namespace Services.Implementation.Authentication
 {
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _repository;
+        private readonly IUserService _service;
         private readonly IConfiguration _config;
+        private readonly IMemoryCache _cache;
+        private readonly EncryptionHelper _crypto; // Added EncryptionHelper
 
-        public AuthService(IUserRepository repository, IConfiguration config)
+        public AuthService(IUserRepository repository, IConfiguration config, IMemoryCache cache, EncryptionHelper crypto, IUserService service)
         {
             _repository = repository;
             _config = config;
+            _cache = cache;
+            _crypto = crypto;
+            _service = service;
         }
 
         public async Task<bool> IsSuspended(string userName)
@@ -31,65 +39,62 @@ namespace Services.Implementation.Authentication
 
         public async Task<LoginResponseDTO?> LoginAsync(LoginDTO loginDto, CancellationToken ct)
         {
-            // 1. Fetch user by username
             var user = await _repository.GetByUserNameAsync(loginDto.UserName);
+            if (user == null) return null;
 
-            // 2. Check if user exists
-            if (user == null)
-                return null;
-
-            // 3. Check if password is hashed or plain text and validate accordingly
+            var ek = _crypto.GetKey();
             bool isValid = false;
 
-            // Check if password is already hashed (BCrypt hashes start with $2)
-            if (user.Password.StartsWith("$2"))
+            // 1. Decrypt the password from the database to compare it
+            if (!string.IsNullOrEmpty(user.EncryptedPass))
             {
-                // Verify hashed password - USE FULL NAMESPACE
-                isValid = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password);
-            }
-            else
-            {
-                // Plain text password - verify and migrate to BCrypt
-                isValid = user.Password == loginDto.Password;
+                string decryptedStoredPassword = _crypto.Decrypt(user.EncryptedPass, ek);
 
-                if (isValid)
-                {
-                    // Hash the password for future logins - USE FULL NAMESPACE
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(loginDto.Password, BCrypt.Net.BCrypt.GenerateSalt(12));
-                }
+                // Compare plain text input with decrypted database password
+                isValid = (loginDto.Password == decryptedStoredPassword);
             }
 
             if (!isValid)
+            {
+                // Logic for tracking failure count could be added here using user.PasswordFailuresSinceLastSuccess
                 return null;
+            }
 
-            // 4. Update IsLoggedIn status to true
+            // Update login status
             user.IsLoggedIn = true;
+            user.PasswordFailuresSinceLastSuccess = 0; // Reset failures on success
             await _repository.UpdateAsync(user);
 
-            // 5. Map and Return everything
+            // Fetch Permissions
+            var permissions = await _service.GetPermissionsByUsernameAsync(user.UserName);
+
+            // Cache Permissions
+            var permissionKeys = permissions.Select(p => p.PermissionKey).ToList();
+            _cache.Set($"Perms_{user.UserID}", permissionKeys, TimeSpan.FromHours(8));
+
             var userDto = MapToDTO(user);
 
             return new LoginResponseDTO
             {
-                Token = GenerateToken(user),
-                User = userDto
+                Token = GenerateToken(userDto),
+                User = userDto,
+                Permissions = permissions
             };
         }
 
         public async Task<bool> LogoutAsync(int userId, CancellationToken ct)
         {
             var user = await _repository.GetByIdAsync(userId);
-
-            if (user == null)
-                return false;
+            if (user == null) return false;
 
             user.IsLoggedIn = false;
             await _repository.UpdateAsync(user);
 
+            _cache.Remove($"Perms_{userId}");
             return true;
         }
 
-        private string GenerateToken(User user)
+        private string GenerateToken(UserDTO user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"] ?? "Your_Default_Secret_Key_32_Chars_Long");
@@ -112,13 +117,13 @@ namespace Services.Implementation.Authentication
             return tokenHandler.WriteToken(token);
         }
 
-        private UserDTO MapToDTO(User entity)
+        private UserDTO MapToDTO(UserDTO entity)
         {
             return new UserDTO
             {
                 UserID = entity.UserID,
                 UserName = entity.UserName,
-                Password = null,
+                Password = null, // Do not send password to client
                 ExpirationDate = entity.ExpirationDate,
                 IsLoggedIn = entity.IsLoggedIn,
                 IsSuspended = entity.IsSuspended,
@@ -133,17 +138,11 @@ namespace Services.Implementation.Authentication
                 EmailAddress = entity.EmailAddress,
                 ForgotPasswordExpiry = entity.ForgotPasswordExpiry,
                 ForgotPasswordCode = entity.ForgotPasswordCode,
-                EncryptedPass = null,
+                EncryptedPass = null, // Do not send encrypted pass to client
                 LastPasswordFailureDate = entity.LastPasswordFailureDate,
                 PasswordFailuresSinceLastSuccess = entity.PasswordFailuresSinceLastSuccess,
                 MachineIdentifier = entity.MachineIdentifier
             };
-        }
-
-        // Helper method to hash passwords when creating new users
-        public string HashPassword(string plainPassword)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(plainPassword, BCrypt.Net.BCrypt.GenerateSalt(12));
         }
     }
 }
