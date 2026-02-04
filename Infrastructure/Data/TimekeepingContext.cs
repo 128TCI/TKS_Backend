@@ -62,11 +62,31 @@ public class TimekeepingContext : DbContext
     //ImportWorkshift
     public DbSet<ImportWorkShiftVariableDto> tk_EmpTKConfigWorkShiftVariableMaint { get; set; }
 
+    //ImportAdjustment
+    public DbSet<EmpGroupImportAdjust> tk_EmpTKConfigBasicMaint { get; set; }
+
     //WorkShift
     public DbSet<WorkShiftDto> tk_WorkShiftCode { get; set; }
+    public DbSet<WorkShiftByInOrOut> tkWorkShiftCode { get; set; }
+    public DbSet<WorkShiftAsOfDateDto> tk_EmpTKConfigWorkShiftFixedMaint { get; set; }
 
     //LeaveTypes
     public DbSet<LeaveTypesDto> tbl_fsLeaveType { get; set; }
+
+    //DeviceType
+    public DbSet<DeviceTypeDto> tbl_fsDeviceType { get; set; }
+
+    //DayType
+    public DbSet<DayTypeDto> DayTypeOfDatePerEmployee { get; set; }
+
+    //OTApproved
+    public DbSet<OTApprovedDto> OTApproved {  get; set; }
+
+    //TKSRawData
+    public DbSet<RawDataDto> tbl_TKSRawData { get; set; }
+
+    //TKEmployeeMasterfile
+    public DbSet<TKEmployeeMasterfileDto> TKEmployeeMasterfile { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

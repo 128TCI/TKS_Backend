@@ -22,6 +22,7 @@ using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
 using Infrastructure.Repositories.WorkShift;
 using Microsoft.EntityFrameworkCore;
+using Services;
 using Services.DTOs.Encryption;
 using Services.Implementation.Authentication;
 using Services.Interfaces.Authentication;
@@ -170,8 +171,8 @@ builder.Services.AddScoped<ISectionSetUpService, SectionSetUpService>();
 builder.Services.AddScoped<IUnitSetUpRepository, UnitSetUpRepository>();
 builder.Services.AddScoped<IUnitSetUpService, UnitSetUpService>();
 //UnitSetUp
-builder.Services.AddScoped<IUnitSetUpRepository, UnitSetUpRepository>();
-builder.Services.AddScoped<IUnitSetUpService, UnitSetUpService>();
+//builder.Services.AddScoped<IUnitSetUpRepository, UnitSetUpRepository>();
+//builder.Services.AddScoped<IUnitSetUpService, UnitSetUpService>();
 
 
 //Maintenance
@@ -206,8 +207,24 @@ builder.Services.AddScoped<IImportOvertimeApplicationService, ImportOvertimeAppl
 builder.Services.AddScoped<IImportDeviceCodeRepository, ImportDeviceCodeRepository>();
 builder.Services.AddScoped<IImportDeviceCodeService, ImportDeviceCodeService>();
 
+//ImportEmployeeMasterfile
+builder.Services.AddScoped<IImportEmployeeMasterfileRepository, ImportEmployeeMasterfileRepository>();
+builder.Services.AddScoped<IImportEmployeeMasterfileService, ImportEmployeeMasterfileService>();
+
+//ImportAdjustment
+builder.Services.AddScoped<IImportAdjustmentRepository, ImportAdjustmentRepository>();
+builder.Services.AddScoped<IImportAdjustmentService, ImportAdjustmentService>();
+
+//ImportLogsFromDevice
+builder.Services.AddScoped<IImportLogsFromDeviceRepository, ImportLogsFromDeviceRepository>();
+builder.Services.AddScoped<IImportLogsFromDeviceService, ImportLogsFromDeviceService>();
+
 //WorkShift
 builder.Services.AddScoped<IWorkShiftRepository, WorkShiftRepository>();
+
+//DeviceType
+builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
+builder.Services.AddScoped<IDeviceTypeService, DeviceTypeService>();
 
 var app = builder.Build();
 
