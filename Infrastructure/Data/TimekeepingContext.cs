@@ -4,6 +4,7 @@ using DomainEntities.DTO.FileSetUp.Process;
 using DomainEntities.DTO.FileSetUp.Process.Allowance_and_Earnings;
 using DomainEntities.DTO.FileSetUp.Process.Device;
 using DomainEntities.DTO.FileSetUp.Process.Device.EquivHoursDeductionSetUp;
+using DomainEntities.DTO.FileSetUp.Process.Overtime;
 using DomainEntities.DTO.FileSetUp.System;
 using DomainEntities.DTO.Maintenance;
 using DomainEntities.DTO.User;
@@ -46,6 +47,7 @@ public class TimekeepingContext : DbContext
     public DbSet<EquivDayForNoBreat2InDTO> tk_EquivDayForNoBreak2In { get; set; }
     public DbSet<EquivDayForNoBreat2OutDTO> tk_EquivDayForNoBreak2Out { get; set; }
     public DbSet<HelpSetUpDTO> tk_HelpSetup { get; set; }
+    public DbSet<RestDayOTRateSetUpDTO> tk_RestDayOTRatesSetUp { get; set; }
     //File Setup/Employee
     public DbSet<UserDTO> tk_Users { get; set; }
     public DbSet<AreaSetUp> tbl_fsArea { get; set; }
