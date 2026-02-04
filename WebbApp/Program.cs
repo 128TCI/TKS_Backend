@@ -21,7 +21,9 @@ using Infrastructure.Repositories.LeaveTypes;
 using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
 using Infrastructure.Repositories.WorkShift;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Services.DTOs.Encryption;
 using Services.Implementation.Authentication;
 using Services.Interfaces.Authentication;
@@ -46,6 +48,7 @@ using Services.Services.Import;
 using Services.Services.LeaveTypes;
 using Services.Services.Maintenance;
 using Services.Services.UserRepository;
+using System.Data;
 using Timekeeping.Infrastructure.Data;
 using WebbApp.Api.FileSetUp.Process.Allowance_and_Earnings;
 
@@ -73,10 +76,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Database
 builder.Services.AddDbContext<TimekeepingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TKS")));
-
+// Dapper (IDbConnection)
+builder.Services.AddScoped<IDbConnection>(sp =>
+    new SqlConnection(builder.Configuration.GetConnectionString("TKS")));
 // Dependency Injection
 //User
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -116,12 +122,42 @@ builder.Services.AddScoped<IBorrowedDeviceNameService, BorrowedDeviceNameService
 //CoordinatesSetUP
 builder.Services.AddScoped<ICoordinatesSetUpRepository, CoordinatesSetUpRepository>();
 builder.Services.AddScoped<ICoordinatesSetUpService, CoordinatesSetUpService>();
+//DeviceTypeSetUP
+builder.Services.AddScoped<IDeviceTypeSetUpRepository, DeviceTypeSetUpRepository>();
+builder.Services.AddScoped<IDeviceTypeSetUpService, DeviceTypeSetUpService>();
+//DTRFlagSetUp
+builder.Services.AddScoped<IDTRFlagSetUpRepository, DTRFlagSetUpRepository>();
+builder.Services.AddScoped<IDTRFlagSetUpService, DTRFlagSetUpService>();
+//HelpSetUp
+builder.Services.AddScoped<IHelpSetUpRepository, HelpSetUpRepository>();
+builder.Services.AddScoped<IHelpSetUpService, HelpSetUpService>();
+//LeaveTypeSetUp
+builder.Services.AddScoped<ILeaveTypeSetUpRepository, LeaveTypeSetUpRepository>();
+builder.Services.AddScoped<ILeaveTypeSetUpService, LeaveTypeSetUpService>();
+//DTRLogFieldsSetUp
+builder.Services.AddScoped<IDTRLogFieldSetUpRepository, DTRLogFieldsSetUpRepository>();
+builder.Services.AddScoped<IDTRLogFieldsSetUpService, DTRLogFieldsSetUpService>();
 //ForAbsent
 builder.Services.AddScoped<IEquivDayForAbsentRepository, EquivDayForAbsentRepository>();
 builder.Services.AddScoped<IEquivDayForAbsentService, EquivDayForAbsentService>();
 //ForNoLogin
 builder.Services.AddScoped<IEquivDayForNoLoginRepository, EquivDayForNologinRepository>();
 builder.Services.AddScoped<IEquivDayForNoLoginService, EquivDayForNoLoginService>();
+//ForNoLogout
+builder.Services.AddScoped<IEquivDayForNoLogOutRepository, EquivDayForNoLogoutRepository>();
+builder.Services.AddScoped<IEquivDayForNoLogoutService, EquivDayForNoLogoutService>();
+//ForNoBreak2In
+builder.Services.AddScoped<IEquivDayForNoBreak2InRepository, EquivDayForNoBreak2InRepository>();
+builder.Services.AddScoped<IEquivDayForNoBreak2InService, EquivDayForNoBreak2InService>();
+//ForNoBreak2Out
+builder.Services.AddScoped<IEquivDayForNoBreak2OutRepository, EquivDayForNoBreak2OutRepository>();
+builder.Services.AddScoped<IEquivDayForNoBreak2OutService, EquivDayForNoBreak2OutService>();
+//MySQLDbConfig
+builder.Services.AddScoped<IMySQLDbConfigSetUpRepository, MySQLDbConfigSetUpRepository>();
+builder.Services.AddScoped<IMySQLDbConfigSetUpService, MySQLDbConfigSetUpService>();
+//SDKListSetUp
+builder.Services.AddScoped<ISDKListSetUpRepository, SDKListSetUpRepository>();
+builder.Services.AddScoped<ISDKListSetUpService, SDKListSetUpService>();
 //TimeKeepGroupSetUp
 builder.Services.AddScoped<ITimeKeepGroupSetUpRepository, TimeKeepGroupSetUpRepository>();
 builder.Services.AddScoped<ITimeKeepGroupSetUpService, TimeKeepGroupSetUpService>();
@@ -182,7 +218,8 @@ builder.Services.AddScoped<IEmployeeMasterFileService, EmployeeMasterFileService
 //Authentication
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEncryptionService, EncryptionService>();
-
+// Add this line to enable the cache service
+builder.Services.AddMemoryCache();
 //LeaveTypes
 builder.Services.AddScoped<ILeaveTypesRepository, LeaveTypesRepository>();
 builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
@@ -217,7 +254,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "uploaded")),
+    RequestPath = "/uploaded"
+});
 // 3. Enable CORS middleware (Must be between UseRouting and UseAuthorization)
 app.UseCors(myAllowSpecificOrigins);
 
