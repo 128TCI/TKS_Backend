@@ -10,6 +10,7 @@ using Infrastructure.IRepositories.LeaveTypes;
 using Infrastructure.IRepositories.Maintenance;
 using Infrastructure.IRepositories.UserRepository;
 using Infrastructure.IRepositories.WorkShift;
+using Infrastructure.IRepositories.Utilities;
 using Infrastructure.Repositories.FileSetup.Employment;
 using Infrastructure.Repositories.FileSetup.Process;
 using Infrastructure.Repositories.FileSetup.Process.Allowance_and_Earnings;
@@ -21,6 +22,7 @@ using Infrastructure.Repositories.LeaveTypes;
 using Infrastructure.Repositories.Maintennace;
 using Infrastructure.Repositories.UserRepository;
 using Infrastructure.Repositories.WorkShift;
+using Infrastructure.Repositories.Utilities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -38,6 +40,7 @@ using Services.Interfaces.FileSetUp.System;
 using Services.Interfaces.Import;
 using Services.Interfaces.LeaveTypes;
 using Services.Interfaces.Maintenence;
+using Services.Interfaces.Utilities;
 using Services.Services.FileSetUp.Employment;
 using Services.Services.FileSetUp.Process;
 using Services.Services.FileSetUp.Process.Allowance_and_Earnings;
@@ -49,6 +52,7 @@ using Services.Services.LeaveTypes;
 using Services.Services.Maintenance;
 using Services.Services.UserRepository;
 using System.Data;
+using Services.Services.Utilities;
 using Timekeeping.Infrastructure.Data;
 using WebbApp.Api.FileSetUp.Process.Allowance_and_Earnings;
 
@@ -223,6 +227,13 @@ builder.Services.AddMemoryCache();
 //LeaveTypes
 builder.Services.AddScoped<ILeaveTypesRepository, LeaveTypesRepository>();
 builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
+
+//Utilities
+//Utilities/Employee Configuration
+//Update Status
+builder.Services.AddScoped<IUpdateStatusRepository, UpdateStatusRepository>();
+builder.Services.AddScoped<IUpdateStatusService, UpdateStatusService>();
+
 
 //ImportWorkshiftVariable
 builder.Services.AddScoped<IImportWorkshiftVariableRepository, ImportWorkshiftVariableRepository>();
