@@ -224,6 +224,13 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<ILeaveTypesRepository, LeaveTypesRepository>();
 builder.Services.AddScoped<ILeaveTypesService, LeaveTypesService>();
 
+//Utilities
+//Utilities/Employee Configuration
+//Update Status
+builder.Services.AddScoped<IUpdateStatusRepository, UpdateStatusRepository>();
+builder.Services.AddScoped<IUpdateStatusService, UpdateStatusService>();
+
+
 //ImportWorkshiftVariable
 builder.Services.AddScoped<IImportWorkshiftVariableRepository, ImportWorkshiftVariableRepository>();
 builder.Services.AddScoped<IImportWorkshiftVariableService, ImportWorkshiftVariableService>();
