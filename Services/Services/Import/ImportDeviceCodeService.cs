@@ -2,7 +2,6 @@
 using DomainEntities.Dto;
 using DomainEntities.DTO;
 using Infrastructure.IRepositories.Import;
-using Infrastructure.IRepositories.LeaveTypes;
 using Infrastructure.IRepositories.Maintenance;
 using Microsoft.AspNetCore.Http;
 using Services.Extensions;

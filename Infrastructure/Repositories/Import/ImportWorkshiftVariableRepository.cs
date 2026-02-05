@@ -1,19 +1,13 @@
-﻿using DomainEntities.Dto;
-using DomainEntities.DTO.FileSetUp.Employment;
-using Infrastructure.IRepositories.Import;
+﻿using Infrastructure.IRepositories.Import;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timekeeping.Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Import;
 
-public class ImportWorkshiftVariableRepository : IImportWorkshiftVariableRepository
+public class ImportWorkshiftVariableRepository(TimekeepingContext context) : IImportWorkshiftVariableRepository
 {
-    private readonly TimekeepingContext _context;
-    public ImportWorkshiftVariableRepository(TimekeepingContext context)
-    {
-        _context = context;
-    }
+    private readonly TimekeepingContext _context = context;
+
     public async Task UpdateWorkshiftVariable(string empCode, DateTime dateFrom, DateTime dateTo, string shiftCode)
     {
         await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC dbo.sp_tk_ImportWorkShift {empCode}, {dateFrom}, {dateTo}, {shiftCode}");

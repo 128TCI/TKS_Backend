@@ -1,19 +1,14 @@
 ﻿using DomainEntities.Dto;
-using DomainEntities.DTO.FileSetUp.Employment;
 using Infrastructure.IRepositories.Import;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timekeeping.Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Import;
 
-public class ImportLeaveApplicationRepository : IImportLeaveApplicationRepository
+public class ImportLeaveApplicationRepository(TimekeepingContext context) : IImportLeaveApplicationRepository
 {
-    private readonly TimekeepingContext _context;
-    public ImportLeaveApplicationRepository(TimekeepingContext context)
-    {
-        _context = context;
-    }
+    private readonly TimekeepingContext _context = context;
+
     public async Task UpdateImportLeaveApplication(ImportLeaveApplicationDto leaveApplicationDto)
     {
         await _context.Database.ExecuteSqlInterpolatedAsync

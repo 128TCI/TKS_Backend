@@ -1,19 +1,13 @@
-﻿using DomainEntities.Dto;
-using DomainEntities.DTO.FileSetUp.Employment;
-using Infrastructure.IRepositories.Import;
+﻿using Infrastructure.IRepositories.Import;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timekeeping.Infrastructure.Data;
 
 namespace Infrastructure.Repositories.Import;
 
-public class ImportDeviceCodeRepository : IImportDeviceCodeRepository
+public class ImportDeviceCodeRepository(TimekeepingContext context) : IImportDeviceCodeRepository
 {
-    private readonly TimekeepingContext _context;
-    public ImportDeviceCodeRepository(TimekeepingContext context)
-    {
-        _context = context;
-    }
+    private readonly TimekeepingContext _context = context;
+
     public async Task UpdateImportDeviceCode(string empCode, DateTime effectivityDate, DateTime expiryDate, string code)
     {
         await _context.Database.ExecuteSqlInterpolatedAsync
