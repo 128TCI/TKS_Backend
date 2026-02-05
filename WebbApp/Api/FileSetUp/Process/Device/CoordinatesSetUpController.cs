@@ -6,7 +6,7 @@ using Services.Interfaces.FileSetUp.Process.Device;
 
 namespace WebbApp.Api.FileSetUp.Process.Device
 {
-    [Route("api/[controller]")]
+    [Route("api/Fs/Process/Device/[controller]")]
     [ApiController]
     public class CoordinatesSetUpController : ControllerBase
     {

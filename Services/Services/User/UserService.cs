@@ -1,89 +1,93 @@
-﻿using DomainEntities.DTO;
-using System.Security.Cryptography;
-using System.Text;
-using Services.Interfaces.Encryption;
-using Services.Interfaces.Employee;
-using Services.DTOs.User;
-using Infrastructure.IRepositories.UserRepository;
+﻿using Dapper;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DomainEntities.DTO.User;
+using Infrastructure.IRepositories.UserRepository;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Services.DTOs.Encryption;
+using Services.DTOs.User;
+using Services.Interfaces.Employee;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Services.Services.UserRepository;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
-    private readonly IEncryptionService _encryptionService; // Injected service
-
-    public UserService(IUserRepository repository, IEncryptionService encryptionService)
+    private readonly EncryptionHelper _crypto;
+    private readonly string _connectionString;
+    public UserService(IUserRepository repository, EncryptionHelper crypto, IConfiguration config)
     {
         _repository = repository;
-        _encryptionService = encryptionService;
+        _crypto = crypto;
+        _connectionString = config.GetConnectionString("TKS")
+            ?? throw new InvalidOperationException("Connection string 'TKS' not found.");
     }
 
     public async Task<bool> UserNameExists(string userName)
     {
-        // Note: You should add this method to your IEmployeeRepository interface
-        // to keep the service decoupled from the DB context.
         return await _repository.UserNameExistsAsync(userName);
     }
 
     public async Task<UserDTO> CreateAsync(UserDTO dto, CancellationToken ct = default)
     {
-        // 1. Map DTO to Entity
-        var user = MapToEntity(dto);
+        var ek = _crypto.GetKey();
+        var entity = MapToEntity(dto);
 
-        // 2. Hash the plain text password using BCrypt
-        // The incoming dto.Password is now plain text (no encryption from frontend)
-        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.BCrypt.GenerateSalt(12));
+        // Encrypt sensitive fields
+        if (!string.IsNullOrEmpty(entity.Password))
+            entity.Password = _crypto.Encrypt(entity.Password, ek);
 
-        // 3. Set Audit fields
-        user.CreatedDate = DateTime.Now;
+        if (!string.IsNullOrEmpty(entity.EncryptedPass))
+            entity.EncryptedPass = _crypto.Encrypt(entity.EncryptedPass, ek);
 
-        // 4. Save to Database
-        var result = await _repository.InsertAsync(user);
+        entity.CreatedDate = DateTime.Now;
 
-        return MapToDTO(result);
+        var result = await _repository.InsertAsync(entity);
+        return DecryptDTOFields(MapToDTO(result), ek);
     }
 
     public async Task<UserDTO> UpdateAsync(UserDTO dto)
     {
-        // 1. Get the existing user from database
+        var ek = _crypto.GetKey();
         var existingUser = await _repository.GetByIdAsync(dto.UserID);
 
         if (existingUser == null)
-            throw new Exception("User not found");
+            throw new KeyNotFoundException("User not found");
 
-        // 2. Map DTO to Entity
-        var user = MapToEntity(dto);
+        // Map all data including audit and failure tracking
+        UpdateEntityFromDTO(existingUser, dto);
 
-        // 3. Handle password update
+        // Encrypt updated password if provided
         if (!string.IsNullOrEmpty(dto.Password))
-        {
-            // Check if the password is already a BCrypt hash (starts with $2)
-            if (dto.Password.StartsWith("$2"))
-            {
-                // Password is already hashed, keep it as is
-                user.Password = dto.Password;
-            }
-            else
-            {
-                // Password is plain text, hash it with BCrypt
-                user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password, BCrypt.Net.BCrypt.GenerateSalt(12));
-            }
-        }
-        else
-        {
-            // No password provided in DTO, keep the existing password
-            user.Password = existingUser.Password;
-        }
+            existingUser.Password = _crypto.Encrypt(dto.Password, ek);
 
-        // 4. Set audit fields
-        user.EditedDate = DateTime.Now;
+        existingUser.EditedDate = DateTime.Now;
 
-        // 5. Update in database
-        var result = await _repository.UpdateAsync(user);
+        var result = await _repository.UpdateAsync(existingUser);
+        return DecryptDTOFields(MapToDTO(result), ek);
+    }
 
-        return MapToDTO(result);
+    public async Task<UserDTO?> GetByIdAsync(int id)
+    {
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity == null) return null;
+
+        var ek = _crypto.GetKey();
+        return DecryptDTOFields(MapToDTO(entity), ek);
+    }
+
+    public async Task<List<UserDTO>> GetAllAsync()
+    {
+        var users = await _repository.GetAllAsync();
+        if (users == null || !users.Any()) return new List<UserDTO>();
+
+        var ek = _crypto.GetKey();
+        return users.Select(user => DecryptDTOFields(MapToDTO(user), ek)).ToList();
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -91,29 +95,75 @@ public class UserService : IUserService
         return await _repository.DeleteAsync(id);
     }
 
-    public async Task<UserDTO?> GetByIdAsync(int id)
+    // --- Encryption/Decryption Helpers ---
+
+    private UserDTO DecryptDTOFields(UserDTO dto, EncryptionKeyUpdated ek)
     {
-        var user = await _repository.GetByIdAsync(id);
-        return user == null ? null : MapToDTO(user);
+        if (!string.IsNullOrEmpty(dto.Password))
+            dto.Password = _crypto.Decrypt(dto.Password, ek);
+
+        if (!string.IsNullOrEmpty(dto.EncryptedPass))
+            dto.EncryptedPass = _crypto.Decrypt(dto.EncryptedPass, ek);
+
+        return dto;
     }
 
-    public async Task<List<UserDTO>> GetAllAsync()
+    private void UpdateEntityFromDTO(UserDTO entity, UserDTO dto)
     {
-        var users = await _repository.GetAllAsync();
+        entity.UserName = dto.UserName ?? string.Empty;
+        entity.ExpirationDate = dto.ExpirationDate;
+        entity.IsLoggedIn = dto.IsLoggedIn;
+        entity.IsSuspended = dto.IsSuspended;
+        entity.MachineName = dto.MachineName ?? string.Empty;
+        entity.EditedBy = dto.EditedBy;
+        entity.EmpCode = dto.EmpCode;
+        entity.IsWindowsAuthenticate = dto.IsWindowsAuthenticate;
+        entity.WindowsLoginName = dto.WindowsLoginName;
+        entity.EmailAddress = dto.EmailAddress;
+        entity.ForgotPasswordExpiry = dto.ForgotPasswordExpiry;
+        entity.ForgotPasswordCode = dto.ForgotPasswordCode;
+        entity.LastPasswordFailureDate = dto.LastPasswordFailureDate;
+        entity.PasswordFailuresSinceLastSuccess = dto.PasswordFailuresSinceLastSuccess;
+        entity.MachineIdentifier = dto.MachineIdentifier;
+        // Password and EncryptedPass are handled in UpdateAsync to ensure encryption
+    }
+    public async Task<List<UserPermissionDTO>> GetPermissionsByUsernameAsync(string username)
+    {
+        // 1. Get the encryption key from your helper
+        var ek = _crypto.GetKey();
 
-        if (users == null || !users.Any())
+        using (var connection = new SqlConnection(_connectionString))
         {
-            return new List<UserDTO>(); // Return empty list instead of null
-        }
+            // 2. Fetch from database using Dapper
+            var results = await connection.QueryAsync<UserPermissionDTO>(
+                "sp_tk_GetAllUserPermissions",
+                new { Username = username },
+                commandType: CommandType.StoredProcedure
+            );
 
-        return users.Select(MapToDTO).ToList();
+            var permissionList = results.ToList();
+
+            // 3. Encrypt values using the retrieved key
+            foreach (var permission in permissionList)
+            {
+                if (!string.IsNullOrEmpty(permission.PermissionKey))
+                {
+                    // Now 'ek' is defined and accessible
+                    permission.PermissionKey = _crypto.Encrypt(permission.PermissionKey, ek);
+                    permission.AccessTypeName = _crypto.Encrypt(permission.AccessTypeName, ek);
+                    permission.FormName = _crypto.Encrypt(permission.FormName, ek); 
+                }
+            }
+
+            return permissionList;
+        }
     }
 
-    // --- Mapping Logic ---
+    // --- Mapping Logic (All fields preserved) ---
 
-    private User MapToEntity(UserDTO dto)
+    private UserDTO MapToEntity(UserDTO dto)
     {
-        return new User
+        return new UserDTO
         {
             UserID = dto.UserID,
             UserName = dto.UserName ?? string.Empty,
@@ -139,7 +189,7 @@ public class UserService : IUserService
         };
     }
 
-    private UserDTO MapToDTO(User entity)
+    private UserDTO MapToDTO(UserDTO entity)
     {
         return new UserDTO
         {

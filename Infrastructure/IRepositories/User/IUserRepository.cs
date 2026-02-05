@@ -1,10 +1,11 @@
 ﻿using DomainEntities.DTO;
+using DomainEntities.DTO.User;
+using Services.DTOs.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DomainEntities.DTO.User;
 
 namespace Infrastructure.IRepositories.UserRepository
 {
@@ -13,17 +14,18 @@ namespace Infrastructure.IRepositories.UserRepository
     {
         Task<bool> UserNameExistsAsync(string userName);
 
-        Task<User> InsertAsync(User employee);
+        Task<UserDTO> InsertAsync(UserDTO employee);
 
-        Task<User> UpdateAsync(User employee);
+        Task<UserDTO> UpdateAsync(UserDTO employee);
 
         Task<bool> DeleteAsync(int id);
 
-        Task<User?> GetByIdAsync(int id);
+        Task<UserDTO?> GetByIdAsync(int id);
 
-        Task<List<User>> GetAllAsync();
+        Task<List<UserDTO>> GetAllAsync();
 
-        Task<User?> GetByUserNameAsync(string userName);
+        Task<UserDTO?> GetByUserNameAsync(string userName);
+        
 
     }
 }
