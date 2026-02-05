@@ -7,5 +7,6 @@ namespace Services.Interfaces.Authentication
     {
         Task<LoginResponseDTO?> LoginAsync(LoginDTO loginDto, CancellationToken ct);
         Task<bool> IsSuspended(string UserName);
+        Task<bool> LogoutAsync(int userId, CancellationToken ct);
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DomainEntities.DTO.FileSetUp.Employment;
 
 namespace Infrastructure.IRepositories.FileSetUp.Employment
 {

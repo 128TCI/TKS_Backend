@@ -64,30 +64,30 @@ namespace Services.Services.FileSetUp.Employment
 
         // --- Mapping Logic ---
 
-        private BranchSetUp MapToEntity(BranchSetUpDTO dto)
-        {
-            return new BranchSetUp
-            {
-                BraID = dto.BraID,
-                BraCode = dto.BraCode,
-                BraDesc = dto.BraDesc,
-                BraMngr = dto.BraMngr,
-                BraMngrCode = dto.BraMngrCode,
-                DeviceName = dto.DeviceName
-            };
-        }
+       private BranchSetUp MapToEntity(BranchSetUpDTO dto)
+{
+    return new BranchSetUp
+    {
+        BraID = dto.BraID,
+        BraCode = dto.BraCode,
+        BraDesc = dto.BraDesc,
+        BraMngr = dto.BraMngr,
+        BraMngrCode = dto.BraMngrCode,
+        DeviceName = dto.DeviceName
+    };
+}
 
-        private BranchSetUpDTO MapToDTO(BranchSetUp entity)
-        {
-            return new BranchSetUpDTO
-            {
-                BraID = entity.BraID,
-                BraCode = entity.BraCode,
-                BraDesc = entity.BraDesc,
-                BraMngr = entity.BraMngr,
-                BraMngrCode = entity.BraMngrCode,
-                DeviceName = entity.DeviceName
-            };
-        }
+private BranchSetUpDTO MapToDTO(BranchSetUp entity)
+{
+    return new BranchSetUpDTO
+    {
+        BraID = entity.BraID,
+        BraCode = entity.BraCode,
+        BraDesc = entity.BraDesc,
+        BraMngr = entity.BraMngr,
+        BraMngrCode = entity.BraMngrCode,
+        DeviceName = entity.DeviceName
+    };
+}
     }
 }

@@ -14,6 +14,6 @@ namespace DomainEntities.DTO.FileSetUp.Employment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EmpStatID { get; set; }
         public string EmpStatCode { get; set; }
-        public string EmpStatDesc { get; set; }
+        public string? EmpStatDesc { get; set; }
     }
 }

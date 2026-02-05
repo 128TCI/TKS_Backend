@@ -19,5 +19,6 @@ namespace Infrastructure.IRepositories.Maintenance
         Task<EmployeeMasterFile?> GetByIdAsync(int id);
 
         Task<List<EmployeeMasterFile>> GetAllAsync();
+        Task<EmployeeMasterFile?> GetByEmpCode(string empCode);
     }
 }

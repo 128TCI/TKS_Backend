@@ -1,4 +1,5 @@
-﻿using Services.DTOs.User;
+﻿using DomainEntities.DTO.User;
+using Services.DTOs.User;
 
 namespace Services.Interfaces.Employee;
 
@@ -10,4 +11,5 @@ public interface IUserService
     Task<bool> DeleteAsync(int id);
     Task<UserDTO?> GetByIdAsync(int id);
     Task<List<UserDTO>> GetAllAsync();
+    Task<List<UserPermissionDTO>> GetPermissionsByUsernameAsync(string username);
 }

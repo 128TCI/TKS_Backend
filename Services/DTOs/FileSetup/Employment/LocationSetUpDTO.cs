@@ -24,7 +24,7 @@ namespace Services.DTOs.FileSetup.Employment
 
         public DateTime? CreatedDate { get; set; }
 
-        public string EditedBy { get; set; }
+        public string? EditedBy { get; set; }
 
         public DateTime? EditedDate { get; set; }
 

@@ -14,9 +14,9 @@ namespace DomainEntities.DTO.FileSetUp.Employment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string GrpCode { get; set; }
-        public string GrpDesc { get; set; }
-        public string GrpHead { get; set; }
-        public string GrpDesig { get; set; }
-        public string GrpHeadCode { get; set; }
+        public string? GrpDesc { get; set; }
+        public string? GrpHead { get; set; }
+        public string? GrpDesig { get; set; }
+        public string? GrpHeadCode { get; set; }
     }
 }

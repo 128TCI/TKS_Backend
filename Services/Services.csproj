@@ -12,8 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\FileSetup\System\" />
     <Folder Include="DTOs\FileSetup\Process\" />
+    <Folder Include="DTOs\FileSetup\System\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
   </ItemGroup>
 
 </Project>

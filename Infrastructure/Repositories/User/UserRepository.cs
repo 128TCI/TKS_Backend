@@ -1,27 +1,35 @@
-﻿using DomainEntities.DTO;
-using Microsoft.EntityFrameworkCore;
-using Timekeeping.Infrastructure.Data;
-using Infrastructure.IRepositories.UserRepository;
+﻿using Dapper;
+using DomainEntities.DTO;
 using DomainEntities.DTO.User;
+using Infrastructure.IRepositories.UserRepository;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Services.DTOs.User;
+using System.Data;
+using Timekeeping.Infrastructure.Data;
 namespace Infrastructure.Repositories.UserRepository;
 
 public class UserRepository : IUserRepository
 {
     private readonly TimekeepingContext _context;
+   
+
 
     public UserRepository(TimekeepingContext context)
     {
         _context = context;
+        
     }
 
-    public async Task<User> InsertAsync(User employee)
+    public async Task<UserDTO> InsertAsync(UserDTO employee)
     {
         _context.tk_Users.Add(employee);
         await _context.SaveChangesAsync();
         return employee;
     }
 
-    public async Task<User> UpdateAsync(User employee)
+    public async Task<UserDTO> UpdateAsync(UserDTO employee)
     {
         _context.tk_Users.Update(employee);
         await _context.SaveChangesAsync();
@@ -38,12 +46,12 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<UserDTO?> GetByIdAsync(int id)
     {
         return await _context.tk_Users.FindAsync(id);
     }
 
-    public async Task<List<User>> GetAllAsync()
+    public async Task<List<UserDTO>> GetAllAsync()
     {
         return await _context.tk_Users
             // Filtering where IsSuspended is false (or null)
@@ -55,9 +63,10 @@ public class UserRepository : IUserRepository
     {
         return await _context.tk_Users.AnyAsync(u => u.UserName == userName);
     }
-    public async Task<User?> GetByUserNameAsync(string userName)
+    public async Task<UserDTO?> GetByUserNameAsync(string userName)
     {
         return await _context.tk_Users
             .FirstOrDefaultAsync(u => u.UserName == userName);
     }
+   
 }

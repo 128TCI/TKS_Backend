@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DomainEntities.DTO.User;
+using Microsoft.AspNetCore.Mvc;
 using Services.DTOs.User;
 using Services.Interfaces.Employee;
 
